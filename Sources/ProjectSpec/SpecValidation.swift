@@ -36,7 +36,7 @@ extension ProjectSpec {
             if !(basePath + configFile).exists {
                 errors.append(.invalidConfigFile(configFile: configFile, config: config))
             }
-            if getConfig(config) == nil {
+            if !options.disabledValidations.contains(.missingConfigs) && getConfig(config) == nil {
                 errors.append(.invalidConfigFileConfig(config))
             }
         }
@@ -56,7 +56,7 @@ extension ProjectSpec {
                 if !(basePath + configFile).exists {
                     errors.append(.invalidTargetConfigFile(target: target.name, configFile: configFile, config: config))
                 }
-                if getConfig(config) == nil {
+                if !options.disabledValidations.contains(.missingConfigs) && getConfig(config) == nil {
                     errors.append(.invalidConfigFileConfig(config))
                 }
             }

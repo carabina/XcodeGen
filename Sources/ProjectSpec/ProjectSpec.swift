@@ -24,6 +24,7 @@ public struct ProjectSpec {
         public var createIntermediateGroups: Bool
         public var bundleIdPrefix: String?
         public var settingPresets: SettingPresets
+        public var disabledValidations: [DisabledValidations]
         public var developmentLanguage: String?
         public var usesTabs: Bool?
         public var tabWidth: Int?
@@ -52,6 +53,10 @@ public struct ProjectSpec {
             }
         }
 
+        public enum DisabledValidations: String {
+            case missingConfigs
+        }
+
         public init(
             carthageBuildPath: String? = nil,
             createIntermediateGroups: Bool = false,
@@ -62,7 +67,8 @@ public struct ProjectSpec {
             tabWidth: Int? = nil,
             usesTabs: Bool? = nil,
             xcodeVersion: String? = nil,
-            deploymentTarget: DeploymentTarget = .init()
+            deploymentTarget: DeploymentTarget = .init(),
+            disabledValidations: [DisabledValidations] = []
         ) {
             self.carthageBuildPath = carthageBuildPath
             self.createIntermediateGroups = createIntermediateGroups
@@ -74,6 +80,7 @@ public struct ProjectSpec {
             self.usesTabs = usesTabs
             self.xcodeVersion = xcodeVersion
             self.deploymentTarget = deploymentTarget
+            self.disabledValidations = disabledValidations
         }
 
         public static func == (lhs: ProjectSpec.Options, rhs: ProjectSpec.Options) -> Bool {
@@ -86,7 +93,8 @@ public struct ProjectSpec {
                 lhs.indentWidth == rhs.indentWidth &&
                 lhs.usesTabs == rhs.usesTabs &&
                 lhs.xcodeVersion == rhs.xcodeVersion &&
-                lhs.deploymentTarget == rhs.deploymentTarget
+                lhs.deploymentTarget == rhs.deploymentTarget &&
+                lhs.disabledValidations == rhs.disabledValidations
         }
     }
 
@@ -207,5 +215,6 @@ extension ProjectSpec.Options: JSONObjectConvertible {
         indentWidth = jsonDictionary.json(atKeyPath: "indentWidth")
         tabWidth = jsonDictionary.json(atKeyPath: "tabWidth")
         deploymentTarget = jsonDictionary.json(atKeyPath: "deploymentTarget") ?? DeploymentTarget()
+        disabledValidations = jsonDictionary.json(atKeyPath: "disabledValidations") ?? []
     }
 }
